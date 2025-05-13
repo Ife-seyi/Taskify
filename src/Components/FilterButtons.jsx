@@ -13,13 +13,13 @@ const FILTERS = ['All', 'Work', 'Personal', 'Urgent', 'Shopping', 'Others'];
 
 const FilterButtons = ({ filter, setFilter }) => {
   return (
-    <div className="flex space-x-2 mb-4 overflow-x-auto pb-2">
+    <div className="flex space-x-2 mb-4 overflow-x-auto pb-2 scrollbar-hide">
       {FILTERS.map((tag) => (
         <button
           key={tag}
-          className={`px-4 py-2 text-white font-semibold rounded-full transition duration-200 ease-in-out whitespace-nowrap
+          className={`px-4 py-2 text-white font-semibold rounded-full transition-all duration-200 ease-in-out whitespace-nowrap
             ${TAG_COLORS[tag]} 
-            ${filter === tag ? 'opacity-100' : 'opacity-70 hover:opacity-90'}`}
+            ${filter === tag ? 'opacity-100 scale-105 shadow-lg' : 'opacity-70 hover:opacity-90 hover:scale-105'}`}
           onClick={() => setFilter(tag)}
         >
           {tag}

@@ -1,22 +1,27 @@
 import React from 'react';
 import TodoItem from './TodoItem';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 function TodoList({ todos, toggleComplete, deleteTodo }) {
   return (
-    <div>
-    {todos.map((todo) => (
-      <motion.div
-        key={todo.id}
-        initial={{ x: -100, opacity: 0 }} // Start off-screen with low opacity
-        animate={{ x: 0, opacity: 1 }} // Slide in and fade in
-        exit={{ x: 100, opacity: 0 }} // Slide out and fade out
-        transition={{ duration: 0.5 }}
-      >
-        <TodoItem todo={todo} toggleComplete={toggleComplete} deleteTodo={deleteTodo} />
-      </motion.div>
-    ))}
-  </div>
+    <AnimatePresence>
+      {todos.map((todo) => (
+        <motion.div
+          key={todo.id}
+          initial={{ y: -10, opacity: 0 }}    // Smooth slide-down animation
+          animate={{ y: 0, opacity: 1 }}
+          exit={{ y: 10, opacity: 0 }}
+          transition={{ duration: 0.3, ease: "easeInOut" }}
+          className="mb-2" // Margin for spacing
+        >
+          <TodoItem 
+            todo={todo} 
+            toggleComplete={toggleComplete} 
+            deleteTodo={deleteTodo} 
+          />
+        </motion.div>
+      ))}
+    </AnimatePresence>
   );
 }
 

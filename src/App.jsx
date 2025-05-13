@@ -49,6 +49,10 @@ function App() {
     setTodos(todos.filter(todo => todo.id !== id));
   };
 
+  const clearCompleted = () => {
+    setTodos(todos.filter(todo => !todo.completed));
+  };
+
   const handleSplashComplete = () => {
     setLoading(false);
   };
@@ -57,10 +61,8 @@ function App() {
     return <SplashScreen onAnimationComplete={handleSplashComplete} />;
   }
 
-  // Filtered todos based on the selected tag
   const filteredTodos = selectedTag === 'All' ? todos : todos.filter(todo => todo.tag === selectedTag);
 
-  // Group by Tags
   const groupedTodos = filteredTodos.reduce((acc, todo) => {
     if (!acc[todo.tag]) {
       acc[todo.tag] = [];
@@ -71,10 +73,17 @@ function App() {
 
   return (
     <div className="max-w-lg mx-auto mt-10 p-4 md:p-6">
-      <h1 className="text-center text-3xl font-semibold mb-6">Taskify</h1>
+      <header className="flex justify-between items-center mb-4">
+        <h1 className="text-3xl font-semibold">Taskify</h1>
+        <button
+          onClick={clearCompleted}
+          className="text-white bg-red-500 px-4 py-2 rounded-lg hover:bg-red-600 transition"
+        >
+          Clear Completed
+        </button>
+      </header>
 
-      {/* Add Task Section */}
-      <div className="mb-6 flex flex-col space-y-4">
+      <div className="mb-6 flex flex-col md:flex-row md:space-x-4">
         <input
           type="text"
           value={newTodo}
@@ -85,12 +94,10 @@ function App() {
         <AddTodoButton onClick={() => addTodo(newTodo, selectedTag)} />
       </div>
 
-          {/* Filter Buttons */}
-          <div className="overflow-x-auto pb-2">
+      <div className="overflow-x-auto pb-2 mb-4">
         <FilterButtons filter={selectedTag} setFilter={setSelectedTag} />
       </div>
 
-      {/* Grouped Tasks with Animation */}
       <AnimatePresence>
         {selectedTag === 'All' ? (
           Object.keys(groupedTodos).map(tag => (
@@ -134,4 +141,3 @@ function App() {
 }
 
 export default App;
-

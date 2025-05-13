@@ -1,16 +1,17 @@
-import React from 'react'
-import { motion } from 'framer-motion'
+import React from 'react';
+import { motion } from 'framer-motion';
 
-const AddTodoButton = ({onClick}) => {
+const AddTodoButton = ({ onClick }) => {
   return (
-     <motion.button
+    <motion.button
       onClick={onClick}
-      className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 focus:outline-none w-full sm:w-auto"
-      whileTap={{ scale: 1.1 }} // Animate the button on click
+      className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300 w-full sm:w-auto transition-all duration-200"
+      whileTap={{ scale: 0.95 }} // Animate button press
+      whileHover={{ scale: 1.02 }} // Slightly enlarge on hover
     >
       Add Task
     </motion.button>
-  )
-}
+  );
+};
 
 export default AddTodoButton;
