@@ -13,7 +13,7 @@ const FILTERS = ['All', 'Work', 'Personal', 'Urgent', 'Shopping', 'Others'];
 
 const FilterButtons = ({ filter, setFilter }) => {
   return (
-    <div className="flex space-x-2 mb-4 overflow-x-auto pb-2 scrollbar-hide">
+    <div className="flex space-x-2 mb-4 md:overflow-x-auto pb-2 scrollbar-hide">
       {FILTERS.map((tag) => (
         <button
           key={tag}

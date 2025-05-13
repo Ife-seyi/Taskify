@@ -49,9 +49,7 @@ function App() {
     setTodos(todos.filter(todo => todo.id !== id));
   };
 
-  const clearCompleted = () => {
-    setTodos(todos.filter(todo => !todo.completed));
-  };
+ 
 
   const handleSplashComplete = () => {
     setLoading(false);
@@ -73,22 +71,14 @@ function App() {
 
   return (
     <div className="max-w-lg mx-auto mt-10 p-4 md:p-6">
-      <header className="flex justify-between items-center mb-4">
-        <h1 className="text-3xl font-semibold">Taskify</h1>
-        <button
-          onClick={clearCompleted}
-          className="text-white bg-red-500 px-4 py-2 rounded-lg hover:bg-red-600 transition"
-        >
-          Clear Completed
-        </button>
-      </header>
+        <h1 className="text-3xl font-semibold mb-6">Taskify</h1>
 
       <div className="mb-6 flex flex-col md:flex-row md:space-x-4">
         <input
           type="text"
           value={newTodo}
           onChange={(e) => setNewTodo(e.target.value)}
-          className="p-2 border rounded w-full md:w-auto"
+          className="p-2 border rounded w-full md:w-auto mb-5"
           placeholder="Add a new task"
         />
         <AddTodoButton onClick={() => addTodo(newTodo, selectedTag)} />
