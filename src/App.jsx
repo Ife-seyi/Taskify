@@ -182,16 +182,25 @@ function App() {
   }, [todos, streak, lastCompletedDate]);
 
   const addTodo = (text, dueDate, tag = 'Others') => {
+    // Ensure dueDate is valid before adding
+    const validDueDate = dueDate ? new Date(dueDate) : null;
+  
+    if (validDueDate && isNaN(validDueDate.getTime())) {
+      alert('Invalid date. Please enter a correct date format.');
+      return;
+    }
+  
     const newTodo = {
       id: Date.now(),
       text,
       completed: false,
       tag,
-      dueDate, // <-- Store the due date here
+      dueDate: validDueDate ? validDueDate.toISOString() : null,
     };
     setTodos([...todos, newTodo]);
     setNewTodo('');
   };
+  
   
 
   const toggleComplete = (id) => {
