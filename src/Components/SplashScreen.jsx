@@ -8,7 +8,7 @@ function SplashScreen({ onAnimationComplete }) {
       initial={{ opacity: 1 }}
       animate={{ opacity: 0 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 2 }}
+      transition={{ duration: 3 }}
       onAnimationComplete={onAnimationComplete}
     >
       <div className="text-center">
