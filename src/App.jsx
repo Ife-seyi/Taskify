@@ -138,6 +138,8 @@ import AddTodoButton from './Components/AddTodoButton';
 import FilterButtons from './Components/FilterButtons';
 import TodoList from './Components/TodoList';
 import SplashScreen from './Components/SplashScreen';
+import CalendarView from './Components/CalenderView';
+
 
 const TAG_COLORS = {
   Work: 'bg-blue-500',
@@ -154,6 +156,7 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [streak, setStreak] = useState(0);
   const [lastCompletedDate, setLastCompletedDate] = useState(null);
+  const [showBadge, setShowBadge] = useState(false);
 
   useEffect(() => {
     const savedTodos = JSON.parse(localStorage.getItem('todos')) || [];
@@ -164,6 +167,10 @@ function App() {
 
     const savedDate = localStorage.getItem('lastCompletedDate');
     setLastCompletedDate(savedDate ? new Date(savedDate) : null);
+
+    if (savedStreak >= 5) {
+      setShowBadge(true);
+    }
   }, []);
 
   useEffect(() => {
@@ -174,16 +181,18 @@ function App() {
     }
   }, [todos, streak, lastCompletedDate]);
 
-  const addTodo = (text, tag) => {
+  const addTodo = (text, dueDate, tag = 'Others') => {
     const newTodo = {
       id: Date.now(),
       text,
       completed: false,
       tag,
+      dueDate, // <-- Store the due date here
     };
     setTodos([...todos, newTodo]);
     setNewTodo('');
   };
+  
 
   const toggleComplete = (id) => {
     const updatedTodos = todos.map(todo =>
@@ -192,8 +201,12 @@ function App() {
     setTodos(updatedTodos);
 
     if (!lastCompletedDate || new Date().toDateString() !== lastCompletedDate.toDateString()) {
-      setStreak(streak + 1);
+      const newStreak = streak + 1;
+      setStreak(newStreak);
       setLastCompletedDate(new Date());
+      if (newStreak >= 5) {
+        setShowBadge(true);
+      }
     }
   };
 
@@ -223,7 +236,6 @@ function App() {
     <div className="max-w-2xl mx-auto mt-10 p-4 md:p-6">
       <h1 className="text-4xl font-bold text-center mb-6">Taskify</h1>
 
-      {/* Streak Counter */}
       <motion.div
         className="bg-green-500 text-white text-center py-2 mb-6 rounded-lg shadow-md"
         initial={{ opacity: 0 }}
@@ -232,6 +244,17 @@ function App() {
       >
         🔥 Current Streak: {streak} Day{streak !== 1 ? 's' : ''}
       </motion.div>
+
+      {showBadge && (
+        <motion.div
+          className="bg-yellow-400 text-white text-center py-2 mb-6 rounded-lg shadow-md animate-bounce"
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          🏅 Congratulations! You've earned a 5-Day Streak Badge!
+        </motion.div>
+      )}
 
       <div className="mb-6 grid grid-cols-1 md:grid-cols-[3fr_1fr] gap-4">
         <input
@@ -286,8 +309,12 @@ function App() {
           </motion.div>
         )}
       </AnimatePresence>
+      <CalendarView todos={todos}/>
+    
+
     </div>
   );
 }
 
 export default App;
+
