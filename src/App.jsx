@@ -132,7 +132,6 @@
 
 // export default App;
 
-
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import AddTodoButton from './Components/AddTodoButton';
@@ -153,15 +152,27 @@ function App() {
   const [newTodo, setNewTodo] = useState('');
   const [selectedTag, setSelectedTag] = useState('All');
   const [loading, setLoading] = useState(true);
+  const [streak, setStreak] = useState(0);
+  const [lastCompletedDate, setLastCompletedDate] = useState(null);
 
   useEffect(() => {
     const savedTodos = JSON.parse(localStorage.getItem('todos')) || [];
     setTodos(savedTodos);
+
+    const savedStreak = parseInt(localStorage.getItem('streak')) || 0;
+    setStreak(savedStreak);
+
+    const savedDate = localStorage.getItem('lastCompletedDate');
+    setLastCompletedDate(savedDate ? new Date(savedDate) : null);
   }, []);
 
   useEffect(() => {
     localStorage.setItem('todos', JSON.stringify(todos));
-  }, [todos]);
+    localStorage.setItem('streak', streak);
+    if (lastCompletedDate) {
+      localStorage.setItem('lastCompletedDate', lastCompletedDate.toISOString());
+    }
+  }, [todos, streak, lastCompletedDate]);
 
   const addTodo = (text, tag) => {
     const newTodo = {
@@ -175,9 +186,15 @@ function App() {
   };
 
   const toggleComplete = (id) => {
-    setTodos(todos.map(todo =>
+    const updatedTodos = todos.map(todo =>
       todo.id === id ? { ...todo, completed: !todo.completed } : todo
-    ));
+    );
+    setTodos(updatedTodos);
+
+    if (!lastCompletedDate || new Date().toDateString() !== lastCompletedDate.toDateString()) {
+      setStreak(streak + 1);
+      setLastCompletedDate(new Date());
+    }
   };
 
   const deleteTodo = (id) => {
@@ -203,21 +220,31 @@ function App() {
   }, {});
 
   return (
-    <div className="max-w-4xl mx-auto mt-10 p-4 md:p-8">
-      <h1 className="text-4xl font-semibold mb-6 text-center">Taskify</h1>
+    <div className="max-w-2xl mx-auto mt-10 p-4 md:p-6">
+      <h1 className="text-4xl font-bold text-center mb-6">Taskify</h1>
+
+      {/* Streak Counter */}
+      <motion.div
+        className="bg-green-500 text-white text-center py-2 mb-6 rounded-lg shadow-md"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        🔥 Current Streak: {streak} Day{streak !== 1 ? 's' : ''}
+      </motion.div>
 
       <div className="mb-6 grid grid-cols-1 md:grid-cols-[3fr_1fr] gap-4">
         <input
           type="text"
           value={newTodo}
           onChange={(e) => setNewTodo(e.target.value)}
-          className="p-3 border rounded w-full"
+          className="p-2 border rounded w-full"
           placeholder="Add a new task"
         />
         <AddTodoButton onClick={() => addTodo(newTodo, selectedTag)} />
       </div>
 
-      <div className="mb-6">
+      <div className="overflow-x-auto pb-2 mb-4">
         <FilterButtons filter={selectedTag} setFilter={setSelectedTag} />
       </div>
 
@@ -230,10 +257,10 @@ function App() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 20 }}
               transition={{ duration: 0.3 }}
-              className="mb-6 bg-white p-4 rounded-lg shadow-md"
+              className="mb-4 bg-white p-3 rounded-lg shadow"
             >
               <h2
-                className={`text-2xl font-bold mb-4 text-white px-3 py-1 rounded-lg ${TAG_COLORS[tag] || 'bg-gray-500'}`}
+                className={`text-xl font-bold mb-2 text-white px-3 py-1 rounded-lg ${TAG_COLORS[tag] || 'bg-gray-500'}`}
               >
                 {tag}
               </h2>
