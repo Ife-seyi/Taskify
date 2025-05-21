@@ -216,10 +216,10 @@
 
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
-import SplashScreen from './components/SplashScreen';
+import SplashScreen from './Components/SplashScreen';
 import GetStarted from './pages/GetStarted';
 import Login from './pages/Login';
-import Signup from './pages/Signup';
+import Signup from './pages/SignUp';
 
 const App = () => {
   const [showSplash, setShowSplash] = useState(true);
