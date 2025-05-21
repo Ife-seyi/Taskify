@@ -66,7 +66,6 @@
 
 // export default CalendarView;
 
-
 import React, { useState, useEffect } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
@@ -80,24 +79,31 @@ const CalendarView = ({ todos }) => {
   const [tags, setTags] = useState([]);
   const [selectedDate, setSelectedDate] = useState('');
 
-  // 🗓️ Function to format date to DD-MM-YYYY
-  const formatDate = (date) => {
+  // 🗓️ Function to format date to DD-MM-YYYY for Display
+  const formatDisplayDate = (date) => {
     const day = String(date.getDate()).padStart(2, '0');
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const year = date.getFullYear();
     return `${day}-${month}-${year}`;
   };
 
+  // 🗓️ Function to format date to YYYY-MM-DD for Storage
+  const formatStorageDate = (date) => {
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${year}-${month}-${day}`;
+  };
+
   // 🎯 Update tasks when date is clicked
   useEffect(() => {
     const selectedTasks = todos.filter(todo =>
-      formatDate(new Date(todo.dueDate)) === formatDate(value)
+      formatStorageDate(new Date(todo.dueDate)) === formatStorageDate(value)
     );
     setSelectedDateTasks(selectedTasks);
 
-    // Update the selected date in DD-MM-YYYY format
-    const formatted = formatDate(value);
-    setSelectedDate(formatted);
+    // Update the selected date in both formats
+    setSelectedDate(formatDisplayDate(value)); // Display Format
   }, [value, todos]);
 
   // 🔄 Load tags from localStorage
@@ -128,7 +134,7 @@ const CalendarView = ({ todos }) => {
     }
 
     const newTagItem = {
-      date: selectedDate, // Store in DD-MM-YYYY
+      date: selectedDate, // Store in Display Format
       tag: newTag,
     };
 
@@ -152,8 +158,8 @@ const CalendarView = ({ todos }) => {
         onChange={setValue}
         value={value}
         tileClassName={({ date }) => {
-          const formattedDate = formatDate(date);
-          const taskOnDate = todos.some(todo => formatDate(new Date(todo.dueDate)) === formattedDate);
+          const formattedDate = formatStorageDate(date);
+          const taskOnDate = todos.some(todo => formatStorageDate(new Date(todo.dueDate)) === formattedDate);
 
           if (taskOnDate) {
             return 'bg-blue-200';
@@ -218,4 +224,5 @@ const CalendarView = ({ todos }) => {
 };
 
 export default CalendarView;
+   
 

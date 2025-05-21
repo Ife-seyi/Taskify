@@ -1,5 +1,5 @@
 import React from "react";
-import { motion } from "framer-motion";
+import { color, motion } from "framer-motion";
 
 function SplashScreen({ onAnimationComplete }) {
   return (
@@ -18,7 +18,9 @@ function SplashScreen({ onAnimationComplete }) {
         <p className="text-lg md:text-2xl animate__animated animate__fadeInUp">
           Manage your tasks like never before.
         </p>
-      </div>
+
+   </div>
+   
 
 
     </motion.div>

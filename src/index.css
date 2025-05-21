@@ -3,6 +3,7 @@
 /* index.css */
 body {
   @apply bg-blue-100; 
+
 }
 
  .scrollbar-hide::-webkit-scrollbar {
@@ -12,3 +13,6 @@ body {
   -ms-overflow-style: none;  
   scrollbar-width: none;  
 } 
+
+/* background-color: #1c1c1c;
+color: white; */
