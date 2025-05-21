@@ -4,7 +4,7 @@ import { color, motion } from "framer-motion";
 function SplashScreen({ onAnimationComplete }) {
   return (
     <motion.div
-      className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-purple-500 to-indigo-600 flex items-center justify-center"
+      className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-teal-500 to-teal-600 flex items-center justify-center"
       initial={{ opacity: 1 }}
       animate={{ opacity: 0 }}
       exit={{ opacity: 0 }}

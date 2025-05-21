@@ -215,7 +215,7 @@
 
 
 import React, { useState, useEffect } from 'react';
-import { Routes, Route, useNavigate } from 'react-router-dom';
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import SplashScreen from './Components/SplashScreen';
 import GetStarted from './pages/GetStarted';
 import Login from './pages/LogIn';
@@ -224,15 +224,20 @@ import Signup from './pages/SignUp';
 const App = () => {
   const [showSplash, setShowSplash] = useState(true);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const timeout = setTimeout(() => {
       setShowSplash(false);
-      navigate('/'); // Go to GetStarted after splash
-    }, 3000); // 3 seconds splash
+
+      // Only redirect to "/" if the user is still on the splash screen (i.e., at root)
+      if (location.pathname === '/') {
+        navigate('/');
+      }
+    }, 3000);
 
     return () => clearTimeout(timeout);
-  }, [navigate]);
+  }, [navigate, location]);
 
   if (showSplash) {
     return <SplashScreen />;
@@ -248,4 +253,3 @@ const App = () => {
 };
 
 export default App;
-
