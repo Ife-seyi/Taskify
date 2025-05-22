@@ -7,7 +7,6 @@
 // import CalendarView from './Components/CalenderView';
 // import Home from './pages/Home';
 
-
 // const TAG_COLORS = {
 //   Work: 'bg-blue-500',
 //   Personal: 'bg-green-500',
@@ -51,12 +50,12 @@
 //   const addTodo = (text, dueDate, tag = 'Others') => {
 //     // Ensure dueDate is valid before adding
 //     const validDueDate = dueDate ? new Date(dueDate) : null;
-  
+
 //     if (validDueDate && isNaN(validDueDate.getTime())) {
 //       alert('Invalid date. Please enter a correct date format.');
 //       return;
 //     }
-  
+
 //     const newTodo = {
 //       id: Date.now(),
 //       text,
@@ -67,8 +66,6 @@
 //     setTodos([...todos, newTodo]);
 //     setNewTodo('');
 //   };
-  
-  
 
 //   const toggleComplete = (id) => {
 //     const updatedTodos = todos.map(todo =>
@@ -187,7 +184,6 @@
 //         )}
 //       </AnimatePresence>
 //       <CalendarView todos={todos}/>
-    
 
 //     </div>
 //   );
@@ -213,42 +209,51 @@
 
 // export default App;
 
-
-import React, { useState, useEffect } from 'react';
-import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
-import SplashScreen from './Components/SplashScreen';
-import GetStarted from './pages/GetStarted';
-import Login from './pages/LogIn';
-import Signup from './pages/SignUp';
+import React, { useState, useEffect } from "react";
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
+import SplashScreen from "./Components/SplashScreen";
+import GetStarted from "./pages/GetStarted";
+import Login from "./pages/LogIn";
+import Signup from "./pages/SignUp";
+import ResetPassword from "./pages/ResetPassword";
+import Verification from "./pages/EmailVerification";
+import NewPassword from "./pages/NewPassword";
+import Home from "./pages/Home";
+import ProtectedRoute from "./Components/ProtectedRoute";
 
 const App = () => {
   const [showSplash, setShowSplash] = useState(true);
   const navigate = useNavigate();
   const location = useLocation();
 
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      setShowSplash(false);
+ useEffect(() => {
+  const timeout = setTimeout(() => {
+    setShowSplash(false);
+    if (location.pathname === "/") {
+      navigate("/get-started");
+    }
+  }, 3000);
 
-      // Only redirect to "/" if the user is still on the splash screen (i.e., at root)
-      if (location.pathname === '/') {
-        navigate('/');
-      }
-    }, 3000);
+  return () => clearTimeout(timeout);
+}, [navigate, location]);
 
-    return () => clearTimeout(timeout);
-  }, [navigate, location]);
 
   if (showSplash) {
     return <SplashScreen />;
   }
 
   return (
-    <Routes>
-      <Route path="/" element={<GetStarted />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/signup" element={<Signup />} />
-    </Routes>
+   <Routes>
+  <Route path="/" element={<SplashScreen />} /> // Optional if you want to access it directly
+  <Route path="/get-started" element={<GetStarted />} />
+  <Route path="/login" element={<Login />} />
+  <Route path="/signup" element={<Signup />} />
+  <Route path="/resetpassword" element={<ResetPassword />} />
+  <Route path="/verify-email" element={<Verification />} />
+  <Route path="/create-new-password" element={<NewPassword />} />
+  <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+</Routes>
+
   );
 };
 
