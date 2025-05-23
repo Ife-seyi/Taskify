@@ -210,6 +210,7 @@
 // export default App;
 
 import React, { useState, useEffect } from "react";
+import 'react-datepicker/dist/react-datepicker.css';
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import SplashScreen from "./Components/SplashScreen";
 import GetStarted from "./pages/GetStarted";
@@ -220,6 +221,7 @@ import Verification from "./pages/EmailVerification";
 import NewPassword from "./pages/NewPassword";
 import Home from "./pages/Home";
 import ProtectedRoute from "./Components/ProtectedRoute";
+import AddTask from "./pages/AddTask";
 
 const App = () => {
   const [showSplash, setShowSplash] = useState(true);
@@ -252,6 +254,7 @@ const App = () => {
   <Route path="/verify-email" element={<Verification />} />
   <Route path="/create-new-password" element={<NewPassword />} />
   <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+  <Route path="/add-task" element={<AddTask/>} />
 </Routes>
 
   );
