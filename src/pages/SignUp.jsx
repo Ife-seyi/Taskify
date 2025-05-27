@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { FaApple } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
+import { RxEyeOpen } from "react-icons/rx";
 import { Link, useNavigate } from "react-router-dom";
 import { auth, googleProvider } from "../firebase";
 import {
@@ -8,12 +9,14 @@ import {
   signInWithPopup,
   updateProfile,
 } from "firebase/auth";
+import { GoEyeClosed } from "react-icons/go";
 
 const SignUp = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState(""); // New state
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSignup = async (e) => {
     e.preventDefault();
@@ -66,13 +69,22 @@ const SignUp = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
-          <input
-            type="password"
-            placeholder="Password"
-            className="w-full px-4 py-2 border rounded-md"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+          <div className="relative">
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="Password"
+              className="w-full px-4 py-2 border rounded-md pr-10"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <div
+              className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-600 cursor-pointer"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? <GoEyeClosed /> : <RxEyeOpen />}
+            </div>
+          </div>
+
           <button
             type="submit"
             className="w-full bg-teal-500 text-white py-2 rounded-md hover:bg-teal-600 transition"

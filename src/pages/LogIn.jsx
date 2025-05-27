@@ -4,11 +4,14 @@ import { FcGoogle } from "react-icons/fc";
 import { Link, useNavigate } from "react-router-dom";
 import { auth, googleProvider } from "../firebase";
 import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { GoEyeClosed } from "react-icons/go";
+import { RxEyeOpen } from "react-icons/rx";
 
 const Login = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -44,13 +47,31 @@ const Login = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
-          <input
-            type="password"
-            placeholder="Password"
-            className="w-full px-4 py-2 border rounded-md"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+          <div className="relative">
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="Password"
+              className="w-full px-4 py-2 border rounded-md pr-10"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <div
+              className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-600 cursor-pointer"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? <GoEyeClosed /> : <RxEyeOpen />}
+            </div>
+          </div>
+
+          <div className="flex justify-end">
+            <Link
+              to="/resetpassword"
+              className="text-sm text-teal-700 hover:underline"
+            >
+              Forgotten password
+            </Link>
+          </div>
+
           <button
             type="submit"
             className="w-full bg-teal-500 text-white py-2 rounded-md hover:bg-teal-600 transition"
