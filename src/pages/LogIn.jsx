@@ -1,34 +1,75 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaApple } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { Link, useNavigate } from "react-router-dom";
 import { auth, googleProvider } from "../firebase";
-import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { signInWithEmailAndPassword, signInWithPopup, onAuthStateChanged } from "firebase/auth";
 import { GoEyeClosed } from "react-icons/go";
 import { RxEyeOpen } from "react-icons/rx";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Login = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  // Redirect if already logged in
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) navigate("/home");
+    });
+    return () => unsubscribe();
+  }, [navigate]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      navigate("/home"); // update route if needed
+      toast.success("Login successful!");
     } catch (error) {
-      alert(error.message);
+      handleAuthError(error);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleGoogleLogin = async () => {
     try {
       await signInWithPopup(auth, googleProvider);
+      toast.success("Google sign-in successful!");
       navigate("/home");
     } catch (error) {
-      alert(error.message);
+      handleAuthError(error);
+    }
+  };
+
+  const handleAuthError = (error) => {
+    const errorCode = error.code;
+    switch (errorCode) {
+      case "auth/invalid-email":
+        toast.error("Invalid email address.");
+        break;
+      case "auth/user-disabled":
+        toast.error("User account is disabled.");
+        break;
+      case "auth/user-not-found":
+        toast.error("No user found with this email.");
+        break;
+      case "auth/wrong-password":
+        toast.error("Incorrect password.");
+        break;
+      case "auth/popup-closed-by-user":
+        toast.warn("Google sign-in was cancelled.");
+        break;
+      case "auth/popup-blocked":
+        toast.error("Popup blocked. Allow popups and try again.");
+        break;
+      default:
+        toast.error("Login failed. Try again.");
     }
   };
 
@@ -46,6 +87,7 @@ const Login = () => {
             className="w-full px-4 py-2 border rounded-md"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            required
           />
           <div className="relative">
             <input
@@ -54,6 +96,7 @@ const Login = () => {
               className="w-full px-4 py-2 border rounded-md pr-10"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              required
             />
             <div
               className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-600 cursor-pointer"
@@ -74,9 +117,10 @@ const Login = () => {
 
           <button
             type="submit"
-            className="w-full bg-teal-500 text-white py-2 rounded-md hover:bg-teal-600 transition"
+            className="w-full bg-teal-500 text-white py-2 rounded-md hover:bg-teal-600 transition disabled:opacity-50"
+            disabled={loading}
           >
-            Login
+            {loading ? "Logging in..." : "Login"}
           </button>
         </form>
 
