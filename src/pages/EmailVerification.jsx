@@ -1,8 +1,19 @@
 import React, { useRef, useState } from "react";
 import { FaArrowLeft } from "react-icons/fa6";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { db } from "../firebase";
+import { doc, getDoc } from "firebase/firestore";
 
 const EmailVerification = () => {
+  const location = useLocation();
+  const email = location.state?.email;
+
+  if (!email) {
+    toast.error("Email not found. Please restart the reset process.");
+    navigate("/resetpassword");
+  }
+
   const navigate = useNavigate();
   const inputsRef = useRef([]);
   const [loading, setLoading] = useState(false);
@@ -24,15 +35,42 @@ const EmailVerification = () => {
     }
   };
 
-  const handleVerify = () => {
+  const handleVerify = async () => {
     setLoading(true);
 
-    // Simulate delay or API call
-    setTimeout(() => {
+    const enteredCode = inputsRef.current.map((input) => input?.value).join("");
+
+    if (enteredCode.length !== 6) {
+      toast.error("Please enter the full 6-digit code");
       setLoading(false);
-      navigate("/create-new-password"); // navigate to your next page
-    }, 2000); // 2 second fake delay
+      return;
+    }
+
+    try {
+      const docRef = doc(db, "resetCodes", email);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        const correctCode = docSnap.data().code;
+
+        if (enteredCode === correctCode) {
+          toast.success("Code verified successfully");
+          navigate("/create-new-password", { state: { email } });
+        } else {
+          toast.error("Incorrect code. Please try again.");
+        }
+      } else {
+        toast.error("No verification code found. Please restart the process.");
+        navigate("/resetpassword");
+      }
+    } catch (error) {
+      toast.error("Something went wrong. Please try again.");
+    }
+
+    setLoading(false);
   };
+
+
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4">
