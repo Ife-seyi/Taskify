@@ -71,7 +71,7 @@ const ResetPassword = () => {
       toast.error("Something went wrong. Try again.");
     }
 
-    await fetch("https://your-vercel-app.vercel.app/api/sendCode", {
+    await fetch("https://taskify-i4um.vercel.app/api/sendCode", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
